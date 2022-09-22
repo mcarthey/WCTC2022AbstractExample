@@ -21,8 +21,18 @@ namespace AbstractExample
                 animal = new Dog();
             }
 
+            else
+            {
+                {
+                    animal = new Horse();
+                }
+            }
+
+            
             animal?.MakeNoise();
             animal?.Sleep();
+
+            
         }
     }
 }

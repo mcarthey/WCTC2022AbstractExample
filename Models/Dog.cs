@@ -18,5 +18,7 @@ namespace AbstractExample.Models
         {
             Console.WriteLine($"{Name} says bark bark");
         }
+
+
     }
 }
