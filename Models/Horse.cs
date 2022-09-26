@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AbstractExample.Models
 {
-    public  class Horse : Animal
+    public class Horse : Animal
     {
         public Horse(string name)
         {

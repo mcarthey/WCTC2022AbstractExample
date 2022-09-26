@@ -1,21 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace AbstractExample.Models
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.Eventing.Reader;
-    using System.IO;
-    using System.Text;
-
-    using Microsoft.Extensions.Logging;
-    using NLog;
-
     public class Movie : Media
     {
-  
-
         private List<Movie> _movies;
-
 
         public string[] Genres { get; set; }
 
@@ -23,39 +15,61 @@ namespace AbstractExample.Models
         public Movie()
         {
             _movies = new List<Movie>();
-            //Read();
+        }
+
+        public override void Display()
+        {
+            // updated to print the string array of genres separately
+            var sb = new StringBuilder();
+            foreach (var movie in _movies)
+            {
+                Console.WriteLine($"Id: {movie.Id}, Title: {movie.Title}");
+                Console.Write("Genres: ");
+                foreach (var genre in movie.Genres)
+                {
+                    Console.Write($"{genre} ");
+                }
+
+                // add a new line for the next output
+                Console.WriteLine();
+            }
         }
 
         public override void Read()
         {
             // Read in the contents of the MoviesAbstract.csv and assign to the Movie properties
             // loop over the file (eg. StreamReader) and read into the following properties
-            string filePath = $"{AppContext.BaseDirectory}/Data/moviesAbstract.csv";
+            var filePath = "MoviesAbstract.csv";
 
             if (!File.Exists(filePath))
             {
-                Console.WriteLine("File does not exist: {File}", filePath);
+                Console.WriteLine($"File does not exist: {filePath}");
                 return;
             }
 
             try
             {
                 _movies = new List<Movie>();
-                StreamReader sr = new StreamReader(filePath);
+                var sr = new StreamReader(filePath);
                 sr.ReadLine();
                 while (!sr.EndOfStream)
                 {
-                    string line = sr.ReadLine();
+                    // read in the line
+                    var line = sr.ReadLine();
+
+                    // split to the array
+                    var contents = line.Split(',');
+
+                    // parse into the Movie object
                     var movie = new Movie();
-                    movie.Id = 0; // would actually be the file contents value
-                    movie.Title = "";
-                    movie.Genres = new string[1];
+                    movie.Id = Convert.ToInt32(contents[0]); // would actually be the file contents value
+                    movie.Title = contents[1];
+                    var genres = contents[2].Split('|'); // remember to split the genres separately
+                    movie.Genres = genres;
 
+                    // add to the List
                     _movies.Add(movie);
-                    // end loop
-
                 }
-
 
                 sr.Close();
             }
@@ -63,17 +77,6 @@ namespace AbstractExample.Models
             {
                 Console.WriteLine(e.Message);
                 _movies = null;
-
-            }
-        }
-
-
-        public override void Display()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (var movie in _movies)
-            {
-                Console.WriteLine($"Id: {movie.Id}, Title: {movie.Title}, Genre: {movie.Genres}");
             }
         }
     }

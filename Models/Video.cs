@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace AbstractExample.Models
 {
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-
     public class Video : Media
     {
         private List<Video> _videos;
@@ -18,12 +17,21 @@ namespace AbstractExample.Models
 
         public Video()
         {
-            _videos= new List<Video>();
+            _videos = new List<Video>();
         }
 
-       public override void Read()
+        public override void Display()
         {
-            string filePath = $"{AppContext.BaseDirectory}/Data/Videos.csv";
+            var sb = new StringBuilder();
+            foreach (var videos in _videos)
+            {
+                Console.WriteLine($"ID: {videos.Id}, Title: {videos.Title}, Format: {videos.Format}, Length: {videos.Length}, Regions: {videos.Regions}");
+            }
+        }
+
+        public override void Read()
+        {
+            var filePath = "Videos.csv";
 
             if (!File.Exists(filePath))
             {
@@ -34,38 +42,23 @@ namespace AbstractExample.Models
             try
             {
                 _videos = new List<Video>();
-                StreamReader sr = new StreamReader(filePath);
+                var sr = new StreamReader(filePath);
                 sr.ReadLine();
 
                 while (!sr.EndOfStream)
                 {
-                    string line = sr.ReadLine();
+                    var line = sr.ReadLine();
                     var video = new Video();
 
                     _videos.Add(video);
                 }
+
                 sr.Close();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                
             }
         }
-
-        public override void Display()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (var videos in _videos)
-            {
-                Console.WriteLine($"ID: {videos.Id}, Title: {videos.Title}, Format: {videos.Format}, Length: {videos.Length}, Regions: {videos.Regions}");
-
-            }
-
-        }
-
     }
-
 }
-
-
