@@ -60,7 +60,7 @@ namespace AbstractExample.Models
                     var video = new Video();
                     video.Id = Convert.ToInt32(contents[0]);
                     video.Title = contents[1];
-                    int[] Regions = contents[2].Split('|'); //What are regions?? ***!!!!!***
+                    int [] Regions = contents[2].Split('|'); //What are regions?? ***!!!!!***
                     video.Regions = regions;
 
                     _videos.Add(video);
